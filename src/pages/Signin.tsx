@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthProvider'
@@ -8,7 +9,7 @@ type FormInputs = {
 }
 
 export function Signin() {
-  const { status, signin } = useAuth()
+  const { user, status, signin } = useAuth()
 
   const navigate = useNavigate()
 
@@ -18,10 +19,14 @@ export function Signin() {
     username,
     password,
   }) => {
-    await signin(username, password, () => {
-      navigate('/')
-    })
+    await signin(username, password)
   }
+
+  useEffect(() => {
+    if (user != null) {
+      navigate('/')
+    }
+  }, [navigate, user])
 
   return (
     <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
